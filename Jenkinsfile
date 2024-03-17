@@ -5,10 +5,6 @@ pipeline {
 	    maven 'maven-3.9'
     }
     stages {
-	stage('Initialize'){
-		def dockerHome = tool 'myDocker'
-		env.PATH = "${dockerHome}/bin:${env.PATH}"
-	}    
         stage("build jar") {
             steps {
 		    script{
