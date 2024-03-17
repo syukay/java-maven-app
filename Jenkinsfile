@@ -5,12 +5,6 @@ pipeline {
 	    maven 'maven-3.9'
     }
     stages {
-	stage("Initialize"){
-	    steps{
-		    def dockerHome = tool 'myDocker'
-		    env.PATH = "${dockerHome}/bin:${env.PATH}"
-	    }	    
-	}
         stage("build jar") {
             steps {
 		    script{
@@ -23,6 +17,8 @@ pipeline {
        stage("build image") {
 	    steps {
 		    script{
+			    def dockerHome = tool 'myDocker'
+               	 	    env.PATH = "${dockerHome}/bin:${env.PATH}"  
 			    echo "building the docker image..."
 			    withCredentials([usernamePassword(credentialsId:'docker-hub-repo',passwordVariable:'PASS',usernameVariable:'USER')]){
 				    sh 'docker build -t syukay/demo-app:jma-2.0 .'
