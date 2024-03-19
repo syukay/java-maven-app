@@ -1,20 +1,45 @@
 pipeline {
+
     agent any
+    tools {
+	    maven 'maven-3.9'
+    }
     stages {
-        stage("build") {
+        stage("build jar") {
             steps {
-			echo 'building the application...'
+		    script{
+			    echo "building the application..."
+			    sh 'mvn package'
+		    }
                 }
         }
-        stage('test') {
-            steps {
-		        echo 'testing the application...'
-            }
+
+		
+
+       stage("build image") {
+	    steps {
+		    script{
+			    def dockerHome = tool 'myDocker'
+               	env.PATH = "${dockerHome}/bin:${env.PATH}"  
+			    echo "building the docker image..."
+			    withCredentials([usernamePassword(credentialsId:'docker-hub-repo',passwordVariable:'PASS',usernameVariable:'USER')]){
+				    sh 'docker build -t syukay/demo-app:jma-2.0 .'
+				    sh 'echo $PASS | docker login -u $USER --password-stdin'
+				    sh 'docker push syukay/demo-app:jma-2.0'
+			    }
+		    }
+                }
         }
+
+	    
         stage('deploy') {
             steps {
-             		echo 'deploying the application...'
-                }
+  		   script{
+			    echo "deploying the application..."
+		    }
+            }
         }
+	
+      
     }
 }
