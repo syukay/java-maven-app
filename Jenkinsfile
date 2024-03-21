@@ -5,18 +5,19 @@ pipeline {
 	    maven 'maven-3.9'
     }
     stages {
-      //   stage("build jar") {
-      //       steps {
-		    // script{
-			   //  echo "building the application..."
-			   //  sh 'mvn package'
-		    // }
-      //           }
-      //   }	
+        stage("build jar") {
+            steps {
+		    script{
+			    echo "building the application..."
+			    sh 'mvn package'
+		    }
+                }
+        }	
 	    
 
        stage("build image") {
 	    steps {
+		     echo "building the image..."
 		    script{
 			    withCredentials([usernamePassword(credentialsId:'docker-hub-repo',passwordVariable:'PASS',usernameVariable:'USER')]){
 				    sh 'docker build -t syukay/demo-app:jma-2.0 .'
