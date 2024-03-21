@@ -12,9 +12,7 @@ pipeline {
 			   //  sh 'mvn package'
 		    // }
       //           }
-      //   }
-
-		
+      //   }	
 
        stage("build image") {
 	    steps {
